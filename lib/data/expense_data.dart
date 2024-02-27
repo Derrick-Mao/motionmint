@@ -39,6 +39,22 @@ class ExpenseData {
     }
   }
 
+  // get start of the week date (Monday)
+  DateTime startOfWeekDate() {
+    DateTime startOfWeek;
+
+    DateTime today = DateTime.now();
+
+    // go to last Monday from today
+    for (int i = 0; i < 7; ++i) {
+      if (getWeekdayName(today.subtract(duration(days: i))) == 'Monday') {
+        startOfWeek = today.subtract(duration(days: i));
+      }
+    }
+
+    return startOfWeek;
+  }
+
   // expense graph by week
 
 }
