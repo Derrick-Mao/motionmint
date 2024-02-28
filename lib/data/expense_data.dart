@@ -55,6 +55,28 @@ class ExpenseData {
     return startOfWeek;
   }
 
-  // expense graph by week
+  // expense graph by day
+  Map<String, double> calcDailyExpenseSum() {
+    Map<String, double> dailyExpenseSum = {};
 
+    for (var expense in overallExpenseList) {
+      String date = convertDateTimeToString(exepense.dateTime);
+
+      //string to double
+      double amount = double.parse(expense.amount);
+
+      if (dailyExpenseSum.containsKey(date)) {
+        double currentAmount = dailyExpenseSum[date]!;
+        currentAmount += amount;
+        dailyExpenseSum[date] = currentAmount;
+      }
+
+      // new date
+      else {
+        dailyExpenseSum.addAll({date: amount});
+      }
+    }
+
+    return dailyExpenseSum;
+  }
 }
