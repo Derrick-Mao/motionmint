@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:motionmint/data/expense_data.dart';
+import 'package:motionmint/models/expense_item.dart';
+import 'package:provider/provider.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -27,7 +30,7 @@ class _MyHomePageState extends State<MyHomePage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Add new expense'),
+        title: const Text('Add new expense'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -59,22 +62,42 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void save() {}
+  void save() {
+    // create new expense item
+    ExpenseItem newExpense = ExpenseItem(
+      name: newExpenseNameController.text,
+      amount: newExpenseAmountController.text,
+      dateTime: DateTime.now(),
+    );
+
+    // add the new expense item
+    Provider.of<ExpenseData>(context, listen: false).addNewExpense(newExpense);
+  }
 
   void cancel() {}
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      
-      floatingActionButton: FloatingActionButton(
-        onPressed: addNewExpense,
-        tooltip: 'Add new expense',
-        child: const Icon(Icons.add),
+    return Consumer<ExpenseData>(
+      builder: (context, value, child) => Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: Text(widget.title),
+        ),
+        
+        floatingActionButton: FloatingActionButton(
+          onPressed: addNewExpense,
+          tooltip: 'Add new expense',
+          child: const Icon(Icons.add),
+        ),
+        body: ListView.builder(
+          itemCount: value.getAllExpenseList().length,
+          itemBuilder: (context, index) => ListTile(
+            title: Text(value.getAllExpenseList()[index].name),
+            subtitle: Text(value.getAllExpenseList()[index].dateTime.toString()),
+            trailing: Text(value.getAllExpenseList()[index].amount),
+          ),
+        ),
       ),
     );
   }
