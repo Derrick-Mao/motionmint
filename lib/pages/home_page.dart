@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:motionmint/data/expense_data.dart';
+import 'package:motionmint/models/expense_item.dart';
+import 'package:provider/provider.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -19,71 +22,83 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  // text controllers
+  final newExpenseNameController = TextEditingController();
+  final newExpenseAmountController = TextEditingController();
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+  void addNewExpense() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Add new expense'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // expense name
+            TextField(
+              controller: newExpenseNameController,
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+            //expense amount
+            TextField(
+              controller: newExpenseAmountController,
             ),
           ],
         ),
+
+        actions: [
+          // save button
+          MaterialButton(
+            onPressed: save,
+            child: const Text('Save'),
+          ),
+
+          // cancel button
+          MaterialButton(
+            onPressed: cancel,
+            child: const Text('Cancel'),
+          ),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+
+  void save() {
+    // create new expense item
+    ExpenseItem newExpense = ExpenseItem(
+      name: newExpenseNameController.text,
+      amount: newExpenseAmountController.text,
+      dateTime: DateTime.now(),
+    );
+
+    // add the new expense item
+    Provider.of<ExpenseData>(context, listen: false).addNewExpense(newExpense);
+  }
+
+  void cancel() {}
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<ExpenseData>(
+      builder: (context, value, child) => Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: Text(widget.title),
+        ),
+        
+        floatingActionButton: FloatingActionButton(
+          onPressed: addNewExpense,
+          tooltip: 'Add new expense',
+          child: const Icon(Icons.add),
+        ),
+        body: ListView.builder(
+          itemCount: value.getAllExpenseList().length,
+          itemBuilder: (context, index) => ListTile(
+            title: Text(value.getAllExpenseList()[index].name),
+            subtitle: Text(value.getAllExpenseList()[index].dateTime.toString()),
+            trailing: Text(value.getAllExpenseList()[index].amount),
+          ),
+        ),
+      ),
     );
   }
 }
