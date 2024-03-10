@@ -25,7 +25,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   // text controllers
   final newExpenseNameController = TextEditingController();
-  final newExpenseAmountController = TextEditingController();
+  final newExpenseDollarController = TextEditingController();
+  final newExpenseCentController = TextEditingController();
 
   void addNewExpense() {
     showDialog(
@@ -38,10 +39,33 @@ class _MyHomePageState extends State<MyHomePage> {
             // expense name
             TextField(
               controller: newExpenseNameController,
+              decoration: const InputDecoration(
+                hintText: "Expense name",
+              ),
             ),
-            //expense amount
-            TextField(
-              controller: newExpenseAmountController,
+            Row(
+              children: [
+                Expanded(
+                  // expense dollar
+                  child: TextField(
+                    controller: newExpenseDollarController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      hintText: "Dollars",
+                    ),
+                  ),
+                ),
+                Expanded(
+                  // expense cent
+                  child: TextField(
+                    controller: newExpenseCentController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      hintText: "Cents",
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -64,10 +88,12 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void save() {
+    String amount = '${newExpenseDollarController.text}.${newExpenseCentController.text}';
+
     // create new expense item
     ExpenseItem newExpense = ExpenseItem(
       name: newExpenseNameController.text,
-      amount: newExpenseAmountController.text,
+      amount: amount,
       dateTime: DateTime.now(),
     );
 
@@ -85,7 +111,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void clear() {
     newExpenseNameController.clear();
-    newExpenseAmountController.clear();
+    newExpenseDollarController.clear();
+    newExpenseCentController.clear();
   }
 
   @override
