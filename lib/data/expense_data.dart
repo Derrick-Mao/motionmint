@@ -27,19 +27,19 @@ class ExpenseData extends ChangeNotifier {
   String getWeekdayName(DateTime dateTime) {
     switch (dateTime.weekday) {
       case 1:
-        return 'Monday';
+        return 'monday';
       case 2:
-        return 'Tuesday';
+        return 'tuesday';
       case 3:
-        return 'Wednesday';
+        return 'wednesday';
       case 4:
-        return 'Thursday';
+        return 'thursday';
       case 5:
-        return 'Friday';
+        return 'friday';
       case 6:
-        return 'Saturday';
+        return 'saturday';
       case 7:
-        return 'Sunday';
+        return 'sunday';
       default:
         return '';
     }
@@ -53,7 +53,7 @@ class ExpenseData extends ChangeNotifier {
 
     // go to last Monday from today
     for (int i = 0; i < 7; ++i) {
-      if (getWeekdayName(today.subtract(Duration(days: i))) == 'Monday') {
+      if (getWeekdayName(today.subtract(Duration(days: i))) == 'monday') {
         startOfWeek = today.subtract(Duration(days: i));
       }
     }

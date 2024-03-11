@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:motionmint/components/expense_summary.dart';
 import 'package:motionmint/components/expense_tile.dart';
 import 'package:motionmint/data/expense_data.dart';
 import 'package:motionmint/models/expense_item.dart';
@@ -129,14 +130,24 @@ class _MyHomePageState extends State<MyHomePage> {
           tooltip: 'Add new expense',
           child: const Icon(Icons.add),
         ),
-        body: ListView.builder(
-          itemCount: value.getAllExpenseList().length,
-          itemBuilder: (context, index) => ExpenseTile(
-            name: value.getAllExpenseList()[index].name,
-            dateTime: value.getAllExpenseList()[index].dateTime,
-            amount: value.getAllExpenseList()[index].amount,
+
+        
+        body: ListView(children: [
+          // weekly expense
+          ExpenseSummary(startOfWeek: value.startOfWeekDate()),
+        
+          // expense list
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: value.getAllExpenseList().length,
+            itemBuilder: (context, index) => ExpenseTile(
+              name: value.getAllExpenseList()[index].name,
+              dateTime: value.getAllExpenseList()[index].dateTime,
+              amount: value.getAllExpenseList()[index].amount,
+            ),
           ),
-        ),
+        ]),
       ),
     );
   }
