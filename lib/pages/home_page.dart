@@ -138,22 +138,25 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
 
         
-        body: ListView(children: [
-          // weekly expense
-          ExpenseSummary(startOfWeek: value.startOfWeekDate()),
-        
-          // expense list
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: value.getAllExpenseList().length,
-            itemBuilder: (context, index) => ExpenseTile(
-              name: value.getAllExpenseList()[index].name,
-              dateTime: value.getAllExpenseList()[index].dateTime,
-              amount: value.getAllExpenseList()[index].amount,
+        body: Padding(
+          padding: const EdgeInsets.only(top: 20.0),
+          child: ListView(children: [
+            // weekly expense
+            ExpenseSummary(startOfWeek: value.startOfWeekDate()),
+
+            // expense list
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: value.getAllExpenseList().length,
+              itemBuilder: (context, index) => ExpenseTile(
+                name: value.getAllExpenseList()[index].name,
+                dateTime: value.getAllExpenseList()[index].dateTime,
+                amount: value.getAllExpenseList()[index].amount,
+              ),
             ),
-          ),
-        ]),
+          ]),
+        ),
       ),
     );
   }
