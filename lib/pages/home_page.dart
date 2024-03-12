@@ -89,20 +89,26 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void save() {
-    String amount = '${newExpenseDollarController.text}.${newExpenseCentController.text}';
+    // only save expense if all input fields are filled
+    if (newExpenseCentController.text.isNotEmpty &&
+        newExpenseDollarController.text.isNotEmpty &&
+        newExpenseCentController.text.isNotEmpty) {
+      // combine dollar and cents    
+      String amount = '${newExpenseDollarController.text}.${newExpenseCentController.text}';
 
-    // create new expense item
-    ExpenseItem newExpense = ExpenseItem(
-      name: newExpenseNameController.text,
-      amount: amount,
-      dateTime: DateTime.now(),
-    );
+      // create new expense item
+      ExpenseItem newExpense = ExpenseItem(
+        name: newExpenseNameController.text,
+        amount: amount,
+        dateTime: DateTime.now(),
+      );
 
-    // add the new expense item
-    Provider.of<ExpenseData>(context, listen: false).addNewExpense(newExpense);
+      // add the new expense item
+      Provider.of<ExpenseData>(context, listen: false).addNewExpense(newExpense);
 
-    Navigator.pop(context);
-    clear();
+      Navigator.pop(context);
+      clear();
+    }
   }
 
   void cancel() {
